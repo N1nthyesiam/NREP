@@ -1,7 +1,6 @@
 This is NREP v0.1 reference
 
 NREP - Network Republc Protocol
-RecRoll - Ricochet Roll
 
 This is secure data transfer protocol with zero trust policy for transmission nodes.
 

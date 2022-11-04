@@ -1,0 +1,6 @@
+{
+	"location": "RU-RSO",
+	"host": "",
+	"port": 80,
+	"nodelist": "nodes.json"
+}

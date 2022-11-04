@@ -1,0 +1,21 @@
+{
+	"RU": {
+		"REGION1": {
+			"node1": {
+				"host": "localhost",
+				"port": "5689",
+				"publickey": "-----BEGIN RSA PUBLIC KEY-----\nMEgCQQCsZGoibHma36u1koAw82g6xyqQlPdOuedBehc0xLhzJlh5yqc31pwotrYD\n42fZWua+OUGPjOFiDHpnCYw0jHTvAgMBAAE=\n-----END RSA PUBLIC KEY-----\n"
+			},
+			"node2": {
+				"host": "localhost",
+				"port": "16689",
+				"publickey": "-----BEGIN RSA PUBLIC KEY-----\nMEgCQQC903SPL1sZG7vdyM8ZOsaHo1fK2v83eOGJP8qQUkDjm3UxbevvYCbvwpxK\nR8AKxBK0c/zj3BWASNQlqEVTgwX5AgMBAAE=\n-----END RSA PUBLIC KEY-----\n"
+			},
+			"node3": {
+				"host": "localhost",
+				"port": "17689",
+				"publickey": "-----BEGIN RSA PUBLIC KEY-----\nMEgCQQC+LHombGuhdhICjFz9VM3THUQPpk5ispm7Wu+hR84V0UJz9hncy5rrL0fX\n6hT8/EwVWZ87vWe18g9Az8gy4CQPAgMBAAE=\n-----END RSA PUBLIC KEY-----\n"
+			}
+		}
+	}
+}

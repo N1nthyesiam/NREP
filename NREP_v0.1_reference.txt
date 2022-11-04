@@ -1,0 +1,55 @@
+This is NREP v0.1 reference
+
+NREP - Network Republc Protocol
+RecRoll - Ricochet Roll
+
+This is secure data transfer protocol with zero trust policy for transmission nodes.
+
+Handshake structure:
+[header] (\xf2 - 1 byte constant value)
+[version] (2 int compatible bytes - major and minor version)
+[encryption] (1 byte raw data encription type \xff - disabled else enabled) #currently not used
+[separator size] (1 int compatible byte - size of payload separator in bytes)
+[separator] (a sequence of bytes of size [separator size])
+[data/payload] (combination of [waypoints] and [keys] fields with same number of elements)
+[waypoints] (list of encrypted by correspond [keys] value waypoints adresses separated by [separator])
+[keys] (list of encrypted by rsa aes keys with nonces before them)
+
+All subsequent data packets are transmitted directly with the specified encryption
+
+Encryption is not supported in this version!
+
+Network components:
+[beacon] (provides information about nodes configurations)
+[node] (base notwork component)
+
+Encryption order:
+The address of each waypoint in the format host:port is encrypted using a random aes key.
+Each random aes key corresponding to a waypoint is encrypted using the rsa key of the previous waypoint.
+Еhe address of the first point is not encrypted and is not added to [waypoints], as it is used only by the client.
+The address of the destination (for example, a website) is encrypted according to the same principle as the address of the waypoint.
+
+Example:
+[first_wp_ip:port]  |  [second_wp_ip:port] [third_wp_ip:pors]  [destination_ip:port]
+[not encrypted]     |  [first_random_aes]  [second_random_aes] [third_random_aes]
+[not encrypted]     |  [first_pw_rsa_key]  [second_wp_rsa_key] [third_wp_rsa_key]
+-------------------------------------------------------------------------------------
+^^Not transmitted^^ |                   ^^^^Handshake Payload^^^^
+
+Decryption order:
+When decrypting (roll) a handshake, each node takes the first key from [keys] and decrypts it with its own rsa key.
+The result is an AES key in the format (nonce+key), which decrypts the first element from [waypoints].
+After that, the handshake is reassembled without the used elements from [waypoints] and [keys] and sent (ricochet) to the next waypoint (the one that was decrypted).
+
+Each node stores the address from which it received the handshake [from] and the address where it sent it [to].
+The node creates a new session whose task is to forward packets from [from] to [to] and vice versa.
+In case of any error, the node must destroy the session.
+
+At the first connection, the handshake is sequentially transmitted through the entire chain of nodes (ricochet roll),
+after which they switch to repeater mode and simply transfer data packets.
+
+Handshake process:
+The client forms a handshake packet and sends it to the first node in the chain.
+The handshake is sequentially transmitted through a chain of nodes,each node excludes information about itself from the handshake.
+When the handshake reaches the last node of the chain, it sends the client one byte of data back along the chain and connects to the target host.
+The handshake is complete.

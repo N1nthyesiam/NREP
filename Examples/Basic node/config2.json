@@ -1,0 +1,8 @@
+{
+	"location": "RU-RSO",
+	"max_connections": 100,
+	"host": "",
+	"port": 17689,
+	"clean_interval": 0.5,
+	"privatekey": "-----BEGIN RSA PRIVATE KEY-----\nMIIBPAIBAAJBAL4seiZsa6F2EgKMXP1UzdMdRA+mTmKymbta76FHzhXRQnP2GdzL\nmusvR9fqFPz8TBVZnzu9Z7XyD0DPyDLgJA8CAwEAAQJABYifyUxwWVNpNL/G2OxF\nzPXWDCqHr2GJDaWYwXWoZ/1UnLSc8ubuY15CX7l4BBKrjXCDRuVwXpOMcszFQ80a\nCQIjAOBKQ+vmuBCcHZQRupyIF4jUGWWtNHKSMreQKO4r9fTCXJsCHwDZD3AchcHi\np2lQksrrb8Bx7PImm2shMQyJO4vLG50CIwCnviMqLLWAhqGAefns08N2K9qKto1B\nGqIfswtJhUs/sJT9Ah5iNib+8NJyUFdJerHP50eHBLPoHghSA1Rtv4CYDM0CIi1j\nSs+gGq2OUe0ZR60dhysHkrNYqjTFvIrBZ8iHByzfnxE=\n-----END RSA PRIVATE KEY-----\n"
+}

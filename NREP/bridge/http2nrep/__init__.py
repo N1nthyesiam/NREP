@@ -5,7 +5,7 @@ import time
 class Bridge:
     upspeed = 0
     downspeed = 0
-    tbuf = 1024**2*100
+    tbuf = 1024**2
 
     def __init__(self, host, port, max_connections=100):
         self.socket = socket.socket()
@@ -20,7 +20,10 @@ class Bridge:
         while True:
             try:
                 conn, addr = self.socket.accept()
+                # t = time.perf_counter()
+                conn.settimeout(1)
                 self.sessions.append(Session(conn, keys, points))
+                # print("pick time", time.perf_counter()-t)
             except:
                 conn.close()
     

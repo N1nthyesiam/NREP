@@ -1,16 +1,17 @@
-import socket, threading
+import socket, threading, time
 from NREP.core.package import Handshake
-import NREP.node as nn
-import time
+import NREP.node as NodeSpace
 
 class Pipe:
 	def __init__(self, _from, key):
 		try:
-			self.buffer_size = nn.Node.tbuf
+			# t = time.perf_counter()
+			self.buffer_size = NodeSpace.Node.tbuf
 			self._from = _from
 			self.alive = True
 			target, pkg = self.get_handshake(key)
 			self.setup(target, pkg)
+			# print("pick time", time.perf_counter()-t)
 		except:
 			self.close()
 
@@ -30,9 +31,7 @@ class Pipe:
 	def setup(self, target, pkg):
 		self._to = socket.socket()
 		addr = target.split(b':')
-		t = time.perf_counter()
 		self._to.connect((addr[0], int(addr[1])))
-		print("pick time",time.perf_counter()-t)
 		if(pkg):
 			self._to.sendall(pkg)
 			self._to.recv(1)

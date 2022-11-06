@@ -1,11 +1,10 @@
-import socket
-import threading
-import time
+import socket, threading, time
 from NREP.utils.logpong import Debug as debug
 from NREP.node.pipe import Pipe
 
 class Node:
-	tbuf = 1024**2*100
+	tbuf = 1024**2
+
 	def __init__(self, config):
 		debug.log("Initializing Node...")
 		self.config = config

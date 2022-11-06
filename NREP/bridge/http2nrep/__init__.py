@@ -1,6 +1,6 @@
 import socket, threading, time
 from NREP.core.NREPClient import SimpleClient, SimpleBeaconManager
-from datetime import datetime
+import time
 
 class Bridge:
     upspeed = 0

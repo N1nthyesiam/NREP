@@ -1,6 +1,7 @@
 import socket, threading
 from NREP.core.package import Handshake
 import NREP.node as nn
+from datetime import datetime
 
 class Pipe:
 	def __init__(self, _from, key):
@@ -28,8 +29,10 @@ class Pipe:
 
 	def setup(self, target, pkg):
 		self._to = socket.socket()
-		addr = target.rsplit(b':',1)
+		addr = target.split(b':')
+		t = datetime.now()
 		self._to.connect((addr[0], int(addr[1])))
+		print("pick time",datetime.now()-t)
 		if(pkg):
 			self._to.sendall(pkg)
 			self._to.recv(1)
@@ -41,7 +44,6 @@ class Pipe:
 			while True:
 				recv = self._from.recv(self.buffer_size)
 				if(recv):
-					# print(recv)
 					self._to.sendall(recv)
 				else:
 					self.close()
@@ -54,7 +56,6 @@ class Pipe:
 			while True:
 				recv = self._to.recv(self.buffer_size)
 				if(recv):
-					# print(recv)
 					self._from.sendall(recv)
 				else:
 					self.close()

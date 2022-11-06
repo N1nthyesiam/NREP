@@ -9,12 +9,14 @@ class SimpleClient():
         self.keys = keys
 
     def connect(self, target, version = "0.1", encryption = False):
+        
         handshake = Handshake.put(self.waypoints + [target],
                                 version,
                                 encryption,
                                 self.keys)
-        address = tuple(self.entry_point.split(':'))
-        sock = socket.create_connection(address)
+        address = self.entry_point.split(':')
+        sock = socket.socket()
+        sock.connect((address[0], int(address[1])))
         sock.sendall(handshake)
         sock.recv(1)
         return sock

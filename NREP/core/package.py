@@ -4,7 +4,6 @@ from Crypto import Random
 import rsa
 
 class Handshake:
-
 	def pick(raw_data, private_key, aes_block_size = 16):
 		head, version, need_encryption, separator_size, separator, waypoints, keys = Handshake.parse(raw_data)
 		key = rsa.decrypt(keys[-1], rsa.PrivateKey.load_pkcs1(private_key.encode()))
@@ -30,7 +29,7 @@ class Handshake:
 		for i in range(len(waypoints)):
 			_key = get_random_bytes(aes_block_size)
 			_iv = random.read(aes_block_size)
-			waypoints[i] = AES.new(_key, AES.MODE_EAX, nonce = _iv).encrypt(waypoints[i])
+			waypoints[i] = AES.new(_key, AES.MODE_EAX, _iv).encrypt(waypoints[i])
 			public_keys[i] = rsa.encrypt(_iv+_key, rsa.PublicKey.load_pkcs1(public_keys[i]))
 		return b''.join((b'\xf2', b''.join(version), need_encryption, separator_size, separator, separator.join(waypoints), separator, separator.join(public_keys)))
 
@@ -38,14 +37,18 @@ class Handshake:
 		try:
 			head = raw_data[:1]
 			assert head==b'\xf2', f"wrong head"
-			version = (raw_data[1:2], 'big', raw_data[2:3], 'big')
-			need_encryption = False if raw_data[3:4]==b'\xff' else True
+			version = (raw_data[1:2], raw_data[2:3])
 			separator_size = int.from_bytes(raw_data[4:5], 'big')
 			separator = raw_data[5:5+separator_size]
 			data = raw_data[5+separator_size:].split(separator)
-			assert len(data)%2==0, "broken payload"
-			waypoints = data[:len(data)//2]
-			keys = data[len(data)//2:]
-			return head, version, need_encryption, raw_data[4:5], separator, waypoints, keys
+			dl = len(data)
+			assert dl%2==0, "broken payload"
+			return 	head,\
+					version,\
+					raw_data[3:4]!=b'\xff',\
+					separator_size,\
+					separator,\
+					data[:dl//2],\
+					data[dl//2:]
 		except:
 			raise ValueError('incorrect handshake')

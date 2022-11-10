@@ -4,16 +4,14 @@ import NREP.node as NodeSpace
 
 class Pipe:
 	def __init__(self, _from, key):
-		# try:
-			t = time.perf_counter()
+		try:
 			self.buffer_size = NodeSpace.Node.tbuf
 			self._from = _from
 			self.alive = True
 			target, pkg = self.get_handshake(key)
 			self.setup(target, pkg)
-			print("pick time", time.perf_counter()-t)
-		# except:
-		# 	self.close()
+		except:
+			self.close()
 
 	def get_handshake(self, key):
 		data = self._from.recv(4096)

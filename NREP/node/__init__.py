@@ -4,7 +4,6 @@ from NREP.node.pipe import Pipe
 
 class Node:
 	tbuf = 1024
-
 	def __init__(self, config):
 		debug.log("Initializing Node...")
 		self.config = config

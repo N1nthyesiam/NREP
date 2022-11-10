@@ -6,18 +6,18 @@ import rsa
 class Handshake:
 	def pick(raw_data, private_key, aes_block_size = 16):
 		head, version, need_encryption, separator_size, separator, waypoints, keys = Handshake.parse(raw_data)
-		key = rsa.decrypt(keys[-1], rsa.PrivateKey.load_pkcs1(private_key.encode()))
+		key = rsa.decrypt(keys[0], rsa.PrivateKey.load_pkcs1(private_key.encode()))
 		_iv = key[:aes_block_size]
 		_key = key[aes_block_size:]
 		cipher = AES.new(_key, AES.MODE_EAX, nonce = _iv)
-		point = cipher.decrypt(waypoints[-1])
+		point = cipher.decrypt(waypoints[0])
 		if(len(waypoints)<2):
 			return point, b''
 		return point, Handshake.compare(head, version, need_encryption, separator_size, separator, waypoints[1:], keys[1:])
 		
 
 	def compare(head, version, need_encryption, separator_size, separator, waypoints, keys):
-		return b''.join((head, version[0].to_bytes(1, 'big')+version[1].to_bytes(1, 'big'), (b'\x00' if need_encryption else b'\xff'), separator_size, separator, separator.join(waypoints), separator, separator.join(keys)))
+		return b''.join((head, version[0].to_bytes(1, 'big')+version[1].to_bytes(1, 'big'), (b'\x00' if need_encryption else b'\xff'), separator_size.to_bytes(1, 'big'), separator, separator.join(waypoints), separator, separator.join(keys)))
 
 	def put(waypoints, version, need_encryption, public_keys, separator=b"NEXTL", aes_block_size = 16):
 		version = tuple(map(lambda i: int(i).to_bytes(1,'big'),version.split('.')))
@@ -37,7 +37,7 @@ class Handshake:
 		try:
 			head = raw_data[:1]
 			assert head==b'\xf2', f"wrong head"
-			version = (raw_data[1:2], raw_data[2:3])
+			version = (int.from_bytes(raw_data[1:2], 'big'), int.from_bytes(raw_data[2:3], 'big'))
 			separator_size = int.from_bytes(raw_data[4:5], 'big')
 			separator = raw_data[5:5+separator_size]
 			data = raw_data[5+separator_size:].split(separator)

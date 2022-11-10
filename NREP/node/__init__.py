@@ -3,7 +3,7 @@ from NREP.utils.logpong import Debug as debug
 from NREP.node.pipe import Pipe
 
 class Node:
-	tbuf = 1024**2
+	tbuf = 1024
 
 	def __init__(self, config):
 		debug.log("Initializing Node...")

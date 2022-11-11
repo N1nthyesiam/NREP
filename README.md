@@ -5,7 +5,9 @@ NREP, NetREP is a decentralized data transmission network project designed for a
 The main provisions of the NREP/RecRoll protocol are given in the [NREP_v0.1_reference.txt](https://github.com/N1nthyesiam/NREP/blob/main/NREP_v0.1_reference.txt).
 
 # Installation
-At the moment, you can use NREP by cloning the [NREP](https://github.com/N1nthyesiam/NREP/tree/main/NREP) folder into your project as a module. The publication of the pip package is planned.
+You can use the [wheel](https://github.com/N1nthyesiam/NREP/blob/Stable/dist/NREP-0.1.0-py3-none-any.whl) to install the package or install it via [PyPI](https://pypi.org/project/NREP/).
+
+Or you can use pip: ```pip install NREP```
 
 # Bit of theory
 NREP redirects your traffic through several network nodes in such a way as to erase the maximum number of indirect signs.

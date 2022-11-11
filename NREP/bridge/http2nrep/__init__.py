@@ -12,7 +12,7 @@ class Bridge:
         self.socket.bind((host, port))
         beacon = SimpleBeaconManager("http://localhost")
         nodes = beacon.get_nodes_from("RU", "REGION1")
-        nodes = {"node":nodes[list(nodes)[0]]}
+        #nodes = {"node":nodes[list(nodes)[0]]}
         points, keys = beacon.get_wpk(nodes)
         self.socket.listen(max_connections)
         self.sessions = []

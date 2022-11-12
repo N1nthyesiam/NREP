@@ -5,10 +5,16 @@ class adict(dict):
     __getattr__ = dict.__getitem__
     __setattr__ = dict.__setitem__
 
-class Config:
+class Config():
     def __init__(self, config_path):
-        with open(config_path) as file:
+        self.config_path = config_path
+        with open(self.config_path) as file:
             self.config = adict(json.load(file))
 
     def __getattr__(self, attr):
         return getattr(self.config, attr)
+
+    def update(self, data):
+        self.config.update(data)
+        with open(self.config_path, 'w') as file:
+            json.dump(self.config, file, indent=1)

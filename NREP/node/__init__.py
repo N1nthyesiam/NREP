@@ -1,6 +1,9 @@
 import socket, threading, time
+import rsa
+from urllib.parse import urljoin
 from NREP.utils.logpong import Debug as debug
 from NREP.node.pipe import Pipe
+import requests
 
 class Node:
 	tbuf = 1024
@@ -20,16 +23,31 @@ class Node:
 		self.income_socket = socket.socket()
 		self.host = socket.gethostbyname(config.host)
 		self.port = config.port
+		self.beacon_url = config.beacon_url
 		self.max_connections = config.max_connections
 		self.clean_interval = config.clean_interval
 		self.main_thread = threading.Thread(target=self.main)
 		self.cleaner_thread = threading.Thread(target=self.cleaner)
-		self.key = config.privatekey
+		if("privatekey" not in config.config or "publickey" not in config.config):
+			pubk, privk = rsa.pkcs1.key.newkeys(2048)
+			privk = privk.save_pkcs1().decode()
+			pubk = pubk.save_pkcs1().decode()
+			config.update({"privatekey": privk, "publickey": pubk})
+		self.pub_key = config.publickey
+		self.priv_key = config.privatekey
 
 	def setup(self):
 		self.income_socket.bind((self.host, self.port))
 		self.pipes = []
 		self.income_socket.listen(self.max_connections)
+		if(self.beacon_url):
+			data = {
+				"location": self.location,
+				"host": self.host,
+				"port": str(self.port),
+				"pubk": self.pub_key
+			}
+			requests.post(urljoin(self.beacon_url, "enroll"), json = data)
 		self.main_thread.start()
 		self.cleaner_thread.start()
 
@@ -46,7 +64,7 @@ class Node:
 			while True:
 				if(len(self.pipes) <= self.max_connections):
 					conn, addr = self.income_socket.accept()
-					client = Pipe(conn, self.key)
+					client = Pipe(conn, self.priv_key)
 					self.pipes.append(client)
 					self.print_pipes_count()
 		finally:

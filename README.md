@@ -8,7 +8,7 @@ The main provisions of the NREP/RecRoll protocol are given in the [NREP_v0.1_ref
 You can use pip to install this package:
 ```pip install NREP```
 
-You also can use the [wheel](https://github.com/N1nthyesiam/NREP/blob/Stable/dist/NREP-0.1.0-py3-none-any.whl) to install the package or install it via [PyPI](https://pypi.org/project/NREP/).
+You also can use the [wheel](https://github.com/N1nthyesiam/NREP/tree/main/dist) to install the package or install it via [PyPI](https://pypi.org/project/NREP/).
 
 # Bit of theory
 NREP redirects your traffic through several network nodes in such a way as to erase the maximum number of indirect signs.

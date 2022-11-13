@@ -3,7 +3,7 @@ This is an exemplary, non-reference implementation of NREP/RecRoll.
 
 NREP, NetREP is a decentralized data transmission network project designed for anonymous and secure interaction with the Internet and blocking bypass.
 The main provisions of the NREP/RecRoll protocol are given in the [NREP_v0.1_reference](https://github.com/N1nthyesiam/NREP/blob/main/NREP_v0.1_reference.txt).
-> Inaccurately, some things have changed in NREP v0.1.1
+> There may be inaccuracies, some things have changed in NREP v0.1.2
 
 # Installation
 You can use pip to install this package:

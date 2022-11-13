@@ -11,6 +11,9 @@ You can use pip to install this package:
 
 You also can use the [wheel](https://github.com/N1nthyesiam/NREP/tree/main/dist) to install the package or install it via [PyPI](https://pypi.org/project/NREP/).
 
+> Using examples for versions younger than v0.1.2 undesirable.  
+Previous releases have been corrupted and are not recommended for use.
+
 # Bit of theory
 NREP redirects your traffic through several network nodes in such a way as to erase the maximum number of indirect signs.
 For each connection (socket), a _pipe_ is created that passes through several nodes.

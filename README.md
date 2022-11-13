@@ -20,3 +20,11 @@ The traffic required to create a pipe (handshake) is also encrypted in a special
 
 Creating a pipe takes some time and piping is used to speed up the connection (one connection can be used for several consecutive requests).
 On average, the difference in speed between direct connection and NREP pipe is ±5%
+
+# Future updates
+> Here are the plans for the upcoming updates.
+- Packet morphing.  
+Masking of RecRoll handshakes under http-requests for better blocking bypass.
+- Nodes ranking system.
+- Beacons subnet.  
+Combining beacons in a network to exchange node lists.

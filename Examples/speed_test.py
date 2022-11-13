@@ -5,7 +5,7 @@ proxy = {
     "https": "http://localhost:8080"
     }
 
-tests_count = 1
+tests_count = 10
 t1,t2,t3,t4=[],[],[],[]
 
 for _ in range(tests_count):

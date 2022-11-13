@@ -1,9 +1,7 @@
-import socket, threading, time
-import rsa
+import socket, threading, requests, rsa, time
 from urllib.parse import urljoin
 from NREP.utils.logpong import Debug as debug
 from NREP.node.pipe import Pipe
-import requests
 
 class Node:
 	tbuf = 1024
@@ -23,7 +21,7 @@ class Node:
 		self.income_socket = socket.socket()
 		self.host = socket.gethostbyname(config.host)
 		self.port = config.port
-		self.beacon_url = config.beacon_url
+		self.beacon_url = config.beacon_url if "beacon_url" in config.config else ""
 		self.max_connections = config.max_connections
 		self.clean_interval = config.clean_interval
 		self.main_thread = threading.Thread(target=self.main)
@@ -40,6 +38,8 @@ class Node:
 		self.income_socket.bind((self.host, self.port))
 		self.pipes = []
 		self.income_socket.listen(self.max_connections)
+		self.main_thread.start()
+		self.cleaner_thread.start()
 		if(self.beacon_url):
 			data = {
 				"location": self.location,
@@ -47,9 +47,11 @@ class Node:
 				"port": str(self.port),
 				"pubk": self.pub_key
 			}
-			requests.post(urljoin(self.beacon_url, "enroll"), json = data)
-		self.main_thread.start()
-		self.cleaner_thread.start()
+			try:
+				node_binding = requests.post(urljoin(self.beacon_url, "enroll"), json = data)
+				debug.log("Successful listed on target beacon" if node_binding else f"Can't' list on target beacon")
+			except:
+				debug.log("Can't connect to the beacon")
 
 	def cleaner(self):
 		while True:

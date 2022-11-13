@@ -1,0 +1,8 @@
+{
+ "location": "MAIN-LOC1",
+ "max_connections": 100,
+ "host": "localhost",
+ "port": 16689,
+ "clean_interval": 0.1,
+ "beacon_url": "http://localhost/"
+}

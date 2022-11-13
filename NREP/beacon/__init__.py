@@ -1,6 +1,7 @@
-import socket, uvicorn, json
+import socket, uvicorn, json, time
 from Crypto.Hash import MD2
 from fastapi import Request, FastAPI, APIRouter
+from NREP.core.NREPClient import SimpleClient
 from NREP.utils.logpong import Debug as debug
 from NREP.utils.spec import adict
 
@@ -19,28 +20,35 @@ class Beacon:
 		self.router = APIRouter()
 		self.host = socket.gethostbyname(config.host)
 		self.port = config.port
-		with open(config.nodeslist, "r") as file:
-			self.nodeslist = json.load(file)
+		with open(config.nodelist, "r") as file:
+			self.nodelist = json.load(file)
+		self.last_update = time.time()
 		
 	def list_node(self, reg, loc, host, port, pubk):
+		SimpleClient([f'{host}:{port}'], [pubk]).connect(f'{self.host}:{self.port}')
 		md2 = MD2.new()
 		md2.update(reg.encode()+loc.encode()+host.encode()+port.encode())
 		name = md2.hexdigest()
-		self.nodeslist[reg][loc][name] = {
+		self.nodelist[reg][loc][name] = {
 			"host": host,
 			"port": port,
 			"publickey": pubk
 		}
-
+		self.last_update = time.time()
+			
 	def setup(self):
 		self.router.add_api_route("/nodes", self.get_nodes, methods=["GET"])
 		self.router.add_api_route("/enroll", self.enroll, methods=["POST"])
 		# self.router.add_api_route("/check", self.check, methods=["POST"])
+		self.router.add_api_route("/lastupdate", self.get_last_update, methods=["GET"])
 		self.app.include_router(self.router)
 		uvicorn.run(self.app, host=self.host, port=self.port)
 
+	async def get_last_update(self):
+		return self.last_update
+
 	async def get_nodes(self):
-		return self.nodeslist
+		return self.nodelist
 
 	async def enroll(self, request: Request):
 		data = adict(await request.json())

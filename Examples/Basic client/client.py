@@ -1,14 +1,13 @@
 import threading
 import time
-from NREP.core.NREPClient import SimpleClient, SimpleBeaconManager
+from NREP.core.NREPClient import SimpleClient, SimpleBeaconManager, SimplePathTracer
 
 class Client():
 	def __init__(self):
 		beacon = SimpleBeaconManager("http://localhost")
-		nodes = beacon.get_nodes_from("RU", "REGION1")
-		nodes = {"node":nodes[list(nodes)[0]]}
+		nodes = beacon.get_nodes()
+		SimplePathTracer.trace_path(nodes)
 		points, keys = beacon.get_wpk(nodes)
-
 		manager = SimpleClient(points, keys)
 		self.sock = manager.connect('2ip.ru:80')
 		print('connected')

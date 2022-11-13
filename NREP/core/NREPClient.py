@@ -1,5 +1,5 @@
+import socket, requests, random
 from NREP.core.package import Handshake
-import socket, requests
 from urllib.parse import urljoin
 
 class SimpleClient():
@@ -24,20 +24,44 @@ class SimpleClient():
 class SimpleBeaconManager():
     def __init__(self, beacon_url):
         self.url = beacon_url
+        self.last_update = 0
+        self.nodes = {}
     
     def get_nodes(self):
-        nodes = requests.get(urljoin(self.url,'/nodes')).json()
-        return nodes
+        upd = self.check_beacon_updates()
+        if(upd>self.last_update):
+            self.nodes = requests.get(urljoin(self.url,'/nodes')).json()
+            self.last_update = upd
+        return self.nodes
 
-    def get_nodes_from(self, country, region):
+    def check_beacon_updates(self):
+        return float(requests.get(urljoin(self.url,'/lastupdate')).text)
+
+    def get_nodes_from(self, region, location):
         try:
             listing = self.get_nodes()
-            nodes = listing[country][region]
+            nodes = listing[region][location]
             return nodes
         except KeyError:
             raise KeyError("Region not found")
 
-    def get_wpk(self, nodes):
+    def get_wpk(nodes):
         points = [nodes[i]['host']+":"+nodes[i]['port'] for i in nodes]
         keys = [nodes[i]['publickey'] for i in nodes]
         return points, keys
+
+class SimplePathTracer():
+    def trace_path(nodes, rex="*", min_path_length=3, max_path_length=3, strict_path_length=False):
+        nodes = {node:nodes[region][location][node] for region in nodes for location in nodes[region] for node in nodes[region][location]}
+        if(strict_path_length and len(nodes)<max(min_path_length, max_path_length)):
+            raise ValueError("Number of nodes less than required path length")
+        selection = list(nodes)
+        random.shuffle(selection)
+        return {node:nodes[node] for node in selection[:random.randint(min(len(nodes), min_path_length), min(len(nodes), max_path_length))]}
+
+
+# rex e.g [regions](locations)
+# * all    ! xeclude    # select
+# 
+# 
+# 

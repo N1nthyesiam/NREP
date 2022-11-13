@@ -36,13 +36,15 @@ class Handshake:
 	def parse(raw_data):
 		try:
 			head = raw_data[:1]
-			assert head==b'\xf2', f"wrong head"
+			if(head!=b'\xf2'):
+				raise ValueError("wrong head")
 			version = (int.from_bytes(raw_data[1:2], 'big'), int.from_bytes(raw_data[2:3], 'big'))
 			separator_size = int.from_bytes(raw_data[4:5], 'big')
 			separator = raw_data[5:5+separator_size]
 			data = raw_data[5+separator_size:].split(separator)
 			dl = len(data)
-			assert dl%2==0, "broken payload"
+			if(dl%2!=0):
+				raise ValueError("broken payload")
 			return 	head,\
 					version,\
 					raw_data[3:4]!=b'\xff',\

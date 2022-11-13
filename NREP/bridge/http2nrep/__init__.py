@@ -1,33 +1,34 @@
 import socket, threading, time
-from NREP.core.NREPClient import SimpleClient, SimpleBeaconManager
-import time
+from NREP.core.NREPClient import SimpleClient, SimpleBeaconManager, SimplePathTracer
 
 class Bridge:
     upspeed = 0
     downspeed = 0
     tbuf = 1024
 
-    def __init__(self, host, port, max_connections=100):
+    def __init__(self, host, port, beacon_url, beacon_updates_rate=60, max_connections=100):
         self.socket = socket.socket()
         self.socket.bind((host, port))
-        beacon = SimpleBeaconManager("http://localhost")
-        nodes = beacon.get_nodes_from("MAIN", "ASSHOLE")
-        #nodes = {"node":nodes[list(nodes)[0]]}
-        points, keys = beacon.get_wpk(nodes)
+        self.beacon = SimpleBeaconManager(beacon_url)
+        self.pathtracer = ()
+        self.beacon_updates_rate = beacon_updates_rate
+        threading.Thread(target=self.nodes_list_updater).start()
         self.socket.listen(max_connections)
         self.sessions = []
         threading.Thread(target=self.speedometer).start()
         while True:
             try:
                 conn, addr = self.socket.accept()
-                # threading.Thread(target=self.make_connection, args=(conn, keys, points)).start()
+                points, keys = SimpleBeaconManager.get_wpk(SimplePathTracer.trace_path(self.nodelist))
                 self.sessions.append(Session(conn, keys, points))
             except:
                 conn.close()
 
-    def make_connection(self, conn, keys, points):
-        self.sessions.append(Session(conn, keys, points))
-    
+    def nodes_list_updater(self):
+        while True:
+            self.nodelist = self.beacon.get_nodes()
+            time.sleep(self.beacon_updates_rate)
+            
     def speedometer(self):
         while True:
             print("UpSpeed:", round(Bridge.upspeed/200,1), "\tDownSpeed:", round(Bridge.downspeed/200,1), "  ", end="\r")

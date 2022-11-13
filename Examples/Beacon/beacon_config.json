@@ -1,6 +1,6 @@
 {
-	"location": "NOWHERE",
-	"host": "",
+	"location": "not used",
+	"host": "localhost",
 	"port": 80,
-	"nodeslist": "nodes_listing.json"
+	"nodelist": "nodes_listing.json"
 }

@@ -25,6 +25,10 @@ Creating a pipe takes some time and piping is used to speed up the connection (o
 On average, the difference in speed between direct connection and NREP pipe is ±5%
 
 # Usage
+> :warning: **warning**  
+Full documentation is in development and will be available soon.  
+If you have any questions, feel free to ask them [here](https://github.com/N1nthyesiam/NREP/discussions/categories/q-a).
+
 NREP can be used to bypass the locks set by the provider or as an alternative to tor in cases where the use of tor is impossible.
 
 For example, we will deploy the network locally to bypass the blocking of some site (e.g. google.com )

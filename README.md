@@ -9,7 +9,7 @@ The main provisions of the NREP/RecRoll protocol are given in the [NREP_v0.1_ref
 You can use pip to install this package:
 ```pip install NREP```
 
-You also can use the [wheel](https://github.com/N1nthyesiam/NREP/tree/main/dist) to install the package or install it via [PyPI](https://pypi.org/project/NREP/).
+You also can use the [wheel](https://github.com/N1nthyesiam/NREP/tree/main/dist), or install it via [PyPI](https://pypi.org/project/NREP/).
 
 > Using examples for versions younger than v0.1.2 undesirable.  
 Previous releases have been corrupted and are not recommended for use.

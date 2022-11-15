@@ -1,8 +1,10 @@
 This is NREP v0.1 reference
 
-NREP - Network Republc Protocol
+NREP/NetREP - Network Republc
 
-This is secure data transfer protocol with zero trust policy for transmission nodes.
+NREP, NetREP is a decentralized data transmission network project designed for anonymous and secure interaction with the Internet and blocking bypass.
+
+RecRoll - is secure data transfer protocol with zero trust policy for transmission nodes.
 
 Handshake structure:
 [header] (\xf2 - 1 byte constant value)

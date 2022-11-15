@@ -1,14 +1,14 @@
 import socket, requests, random
-from NREP.core.package import Handshake
+from NREP.core.package import Handshake, get_nodes_from_listing
 from urllib.parse import urljoin
 
 class SimpleClient():
-    def __init__(self, waypoints, keys):
+    def __init__(self, waypoints: list, keys: list):
         self.waypoints = waypoints[1:]
         self.entry_point = waypoints[0]
         self.keys = keys
 
-    def connect(self, target, version = "0.1", encryption = False):
+    def connect(self, target: str, version: str="0.1", encryption: bool=False):
         
         handshake = Handshake.put(self.waypoints + [target],
                                 version,
@@ -37,7 +37,7 @@ class SimpleBeaconManager():
     def check_beacon_updates(self):
         return float(requests.get(urljoin(self.url,'/lastupdate')).text)
 
-    def get_nodes_from(self, region, location):
+    def get_nodes_from(self, region: str, location: str):
         try:
             listing = self.get_nodes()
             nodes = listing[region][location]
@@ -45,14 +45,14 @@ class SimpleBeaconManager():
         except KeyError:
             raise KeyError("Region not found")
 
-    def get_wpk(nodes):
+    def get_wpk(nodes: list):
         points = [nodes[i]['host']+":"+nodes[i]['port'] for i in nodes]
         keys = [nodes[i]['publickey'] for i in nodes]
         return points, keys
 
 class SimplePathTracer():
-    def trace_path(nodes, rex="*", min_path_length=3, max_path_length=3, strict_path_length=False):
-        nodes = {node:nodes[region][location][node] for region in nodes for location in nodes[region] for node in nodes[region][location]}
+    def trace_path(nodes: list, rex: str="*", min_path_length: int=3, max_path_length: int=3, strict_path_length: bool=False):
+        nodes = get_nodes_from_listing(nodes)
         if(strict_path_length and len(nodes)<max(min_path_length, max_path_length)):
             raise ValueError("Number of nodes less than required path length")
         selection = list(nodes)

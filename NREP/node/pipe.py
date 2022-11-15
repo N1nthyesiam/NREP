@@ -3,7 +3,7 @@ from NREP.core.package import Handshake
 import NREP.node as NodeSpace
 
 class Pipe:
-	def __init__(self, _from, key):
+	def __init__(self, _from: socket.socket, key: str):
 		try:
 			self.buffer_size = NodeSpace.Node.tbuf
 			self._from = _from
@@ -26,7 +26,7 @@ class Pipe:
 		except:
 			pass
 
-	def setup(self, target, pkg):
+	def setup(self, target: bytes, pkg: bytes):
 		self._to = socket.socket()
 		addr = target.split(b':')
 		self._to.connect((addr[0], int(addr[1])))

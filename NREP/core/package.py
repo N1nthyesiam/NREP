@@ -4,7 +4,7 @@ from Crypto import Random
 import rsa
 
 class Handshake:
-	def pick(raw_data, private_key, aes_block_size = 16):
+	def pick(raw_data: bytes, private_key: str, aes_block_size: int=16):
 		head, version, need_encryption, separator_size, separator, waypoints, keys = Handshake.parse(raw_data)
 		key = rsa.decrypt(keys[0], rsa.PrivateKey.load_pkcs1(private_key.encode()))
 		_iv = key[:aes_block_size]
@@ -16,10 +16,10 @@ class Handshake:
 		return point, Handshake.compare(head, version, need_encryption, separator_size, separator, waypoints[1:], keys[1:])
 		
 
-	def compare(head, version, need_encryption, separator_size, separator, waypoints, keys):
+	def compare(head: bytes, version: tuple, need_encryption: bool, separator_size: int, separator: bytes, waypoints: list, keys: list):
 		return b''.join((head, version[0].to_bytes(1, 'big')+version[1].to_bytes(1, 'big'), (b'\x00' if need_encryption else b'\xff'), separator_size.to_bytes(1, 'big'), separator, separator.join(waypoints), separator, separator.join(keys)))
 
-	def put(waypoints, version, need_encryption, public_keys, separator=b"NEXTL", aes_block_size = 16):
+	def put(waypoints: list, version: str, need_encryption: bool, public_keys: list, separator: bytes=b"NEXTL", aes_block_size: int=16):
 		version = tuple(map(lambda i: int(i).to_bytes(1,'big'),version.split('.')))
 		need_encryption = b'\x00' if need_encryption else b'\xff'
 		separator_size = len(separator).to_bytes(1,'big')
@@ -33,7 +33,7 @@ class Handshake:
 			public_keys[i] = rsa.encrypt(_iv+_key, rsa.PublicKey.load_pkcs1(public_keys[i]))
 		return b''.join((b'\xf2', b''.join(version), need_encryption, separator_size, separator, separator.join(waypoints), separator, separator.join(public_keys)))
 
-	def parse(raw_data):
+	def parse(raw_data: bytes):
 		try:
 			head = raw_data[:1]
 			if(head!=b'\xf2'):
@@ -54,3 +54,6 @@ class Handshake:
 					data[dl//2:]
 		except:
 			raise ValueError('incorrect handshake')
+
+def get_nodes_from_listing(nodelisting: dict):
+	return {node:dict(nodelisting[region][location][node], region=region, location=location) for region in nodelisting for location in nodelisting[region] for node in nodelisting[region][location]}

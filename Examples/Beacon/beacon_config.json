@@ -2,5 +2,6 @@
 	"location": "not used",
 	"host": "localhost",
 	"port": 80,
+	"clean_interval": 60,
 	"nodelist": "nodes_listing.json"
 }

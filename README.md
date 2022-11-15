@@ -50,7 +50,7 @@ Now we create the node configuration.
  "host": "HOST",
  "port": 5689,
  "clean_interval": 0.1,
- "beacon_url": "NODE_URL",
+ "beacon_url": "BEACON_URL",
 }
 ```
 The "location" field contains information about the location of the node in the format (region-location).  

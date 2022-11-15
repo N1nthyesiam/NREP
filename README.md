@@ -77,6 +77,7 @@ And the configuration to it.
 	"location": "not used",
 	"host": "BEACON_HOST",
 	"port": 80,
+	"clean_interval": 60,
 	"nodelist": "nodes_listing.json"
 }
 ```

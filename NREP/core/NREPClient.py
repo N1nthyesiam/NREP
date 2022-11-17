@@ -8,21 +8,23 @@ class SimpleClient():
         self.entry_point = waypoints[0]
         self.keys = keys
 
-    def connect(self, target: str, version: str="0.1", encryption: bool=False):
-        
+    def connect(self, target: str, encryption: bool=False):
         handshake = Handshake.put(self.waypoints + [target],
-                                version,
                                 encryption,
                                 self.keys)
         address = self.entry_point.split(':')
         sock = socket.socket()
         sock.connect((address[0], int(address[1])))
         sock.sendall(handshake)
-        sock.recv(1)
+        try:
+            if(sock.recv(1)!=b"\xAB"):
+                raise ConnectionError('wrong endpoint signal')
+        except:
+            raise ConnectionError("can't build pipe")
         return sock
 
 class SimpleBeaconManager():
-    def __init__(self, beacon_url):
+    def __init__(self, beacon_url: str):
         self.url = beacon_url
         self.last_update = 0
         self.nodes = {}

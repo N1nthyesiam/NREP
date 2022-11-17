@@ -13,7 +13,7 @@ class Pipe:
 		except:
 			self.close()
 
-	def get_handshake(self, key):
+	def get_handshake(self, key: str):
 		data = self._from.recv(4096)
 		self._from.send(b"\xAB")
 		return Handshake.pick(data, key)

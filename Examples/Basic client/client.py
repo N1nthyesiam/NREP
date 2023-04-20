@@ -7,7 +7,7 @@ class Client():
 		beacon = SimpleBeaconManager("http://localhost")
 		nodes = beacon.get_nodes()
 		SimplePathTracer.trace_path(nodes)
-		points, keys = beacon.get_wpk(nodes)
+		points, keys = SimpleBeaconManager.get_wpk(nodes)
 		manager = SimpleClient(points, keys)
 		self.sock = manager.connect('2ip.ru:80')
 		print('connected')
